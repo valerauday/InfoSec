@@ -51,7 +51,6 @@ def playfair_index(mat, element):
 def playfair_encrypt(text, keyword):
     mat = playfair_matrix(keyword)
     pair = playfair_pair(text)
-    print(pair)
     encrypted_text = []
 
     for i in range(len(pair)):
@@ -59,29 +58,62 @@ def playfair_encrypt(text, keyword):
         second=pair[i][1]
         first_index=playfair_index(mat, first)
         second_index=playfair_index(mat, second)
-        print(first)
-        print(second)
-        print(first_index)
-        print(second_index[1])
-        if first_index[0] == second_index[0]:  # Same row
+        if first_index[0] == second_index[0]:
             encrypted_text.append(mat[first_index[0]][(first_index[1] + 1) % 5])
             encrypted_text.append(mat[second_index[0]][(second_index[1] + 1) % 5])
-        elif first_index[1] == second_index[1]:  # Same column
+        elif first_index[1] == second_index[1]:
             encrypted_text.append(mat[(first_index[0] + 1) % 5][first_index[1]])
             encrypted_text.append(mat[(second_index[0] + 1) % 5][second_index[1]])
         else:
-            print(first_index)
-            print(second_index)
             encrypted_text.append(mat[first_index[0]][second_index[1]])
             encrypted_text.append(mat[second_index[0]][first_index[1]])
 
     encrypted_text = ''.join(encrypted_text)
     return encrypted_text
 
+def playfair_decrypt(text, keyword):
+    mat = playfair_matrix(keyword)
+    pair = playfair_pair(text)
+    decrypted_text=[]
+    for i in range(len(pair)):
+        first=pair[i][0]
+        second=pair[i][1]
+        first_index=playfair_index(mat, first)
+        second_index=playfair_index(mat, second)
+        if first_index[0] == second_index[0]:
+            decrypted_text.append(mat[first_index[0]][(first_index[1] - 1) % 5])
+            decrypted_text.append(mat[second_index[0]][(second_index[1] - 1) % 5])
+        elif first_index[1] == second_index[1]:
+            decrypted_text.append(mat[(first_index[0] - 1) % 5][first_index[1]])
+            decrypted_text.append(mat[(second_index[0] - 1) % 5][second_index[1]])
+        else:
+            decrypted_text.append(mat[first_index[0]][second_index[1]])
+            decrypted_text.append(mat[second_index[0]][first_index[1]])
 
-# print(playfair_encrypt('hello','keyword'))
-print()
-# print(playfair_encrypt('secret','keyword'))
-# print(playfair_encrypt('attackatdawn','keyword'))
-# print(playfair_encrypt('jump','keyword'))
-print(playfair_encrypt('flask','keyword'))
+    decrypted_text = ''.join(decrypted_text)
+    possible_decrypt=[]
+    possible_decrypt.append(decrypted_text)
+    if decrypted_text[-1] == 'x':
+        possible_decrypt.append(decrypted_text[:-1])
+        if 'i' in decrypted_text:
+            possible_decrypt.append(decrypted_text.replace('i','j'))
+            possible_decrypt.append(decrypted_text[:-1].replace('i','j'))
+    return possible_decrypt
+
+
+if __name__ == '__main__':
+    while True:
+        text = input('Enter your text: ')
+        keyword = input('Enter your keyword: ')
+        choice = input('Encrypt(0) or Decrypt(1): ')
+        if choice == '0':
+            print('\nEncrypted text: ', playfair_encrypt(text, keyword))
+        elif choice == '1':
+            possible_decrypt = playfair_decrypt(text, keyword)
+            print('\n')
+            print('Possible Decrypted Word')
+            for decrypt in possible_decrypt:
+                print(decrypt)
+        else:
+            print('\nInvalid choice')
+        print('\n')
