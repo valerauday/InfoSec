@@ -22,6 +22,7 @@ def playfair_matrix(keyword):
     unique_text = ''.join(sorted(set(keyword), key=keyword.index))
     mat = [['' for _ in range(5)] for _ in range(5)]
     
+    
     index = 0
     for i in range(5):
         for j in range(5):
@@ -50,13 +51,14 @@ def playfair_pair(text):
 
     Example:
         >>> playfair_pair('Hello World')
-        ['he', 'll', 'o', 'wo', 'rl', 'd', 'x']
+        ['he', 'lx', 'lo', 'wo', 'rl', 'd', 'x']
     """
     pair = []
     i = 0
     while i < len(text):
         text = text.lower()
         text = text.replace('j','i')
+        #For Last Single Character (Bogus Value)
         if i == len(text) - 1:
             if text[i] == 'x':
                 pair.append(text[i]+'z')
@@ -64,6 +66,7 @@ def playfair_pair(text):
                 pair.append(text[i] + 'x')
             i += 1
         else:
+            #For Consecutive Character in Pair
             if text[i] == text[i+1]:
                 if text[i] == 'x':
                     pair.append(text[i]+'z')
@@ -112,12 +115,15 @@ def playfair_encrypt(text, keyword):
         second=pair[i][0]
         first_index=playfair_index(mat, first)
         second_index=playfair_index(mat, second)
+        #if pair are in same row
         if first_index[0] == second_index[0]:
             encrypted_text.append(mat[first_index[0]][(first_index[1] + 1) % 5])
             encrypted_text.append(mat[second_index[0]][(second_index[1] + 1) % 5])
+        #if pair are in same column
         elif first_index[1] == second_index[1]:
             encrypted_text.append(mat[(first_index[0] + 1) % 5][first_index[1]])
             encrypted_text.append(mat[(second_index[0] + 1) % 5][second_index[1]])
+        #if pair are in different row and column
         else:
             encrypted_text.append(mat[first_index[0]][second_index[1]])
             encrypted_text.append(mat[second_index[0]][first_index[1]])
@@ -152,12 +158,16 @@ def playfair_decrypt(text, keyword):
         second=pair[i][0]
         first_index=playfair_index(mat, first)
         second_index=playfair_index(mat, second)
+
+        #if pair are in same row
         if first_index[0] == second_index[0]:
             decrypted_text.append(mat[first_index[0]][(first_index[1] - 1) % 5])
             decrypted_text.append(mat[second_index[0]][(second_index[1] - 1) % 5])
+        #if pair are in same column
         elif first_index[1] == second_index[1]:
             decrypted_text.append(mat[(first_index[0] - 1) % 5][first_index[1]])
             decrypted_text.append(mat[(second_index[0] - 1) % 5][second_index[1]])
+        #if pair are in different row and column
         else:
             decrypted_text.append(mat[first_index[0]][second_index[1]])
             decrypted_text.append(mat[second_index[0]][first_index[1]])
@@ -165,15 +175,29 @@ def playfair_decrypt(text, keyword):
     decrypted_text = ''.join(decrypted_text)
     possible_decrypt=[]
     possible_decrypt.append(decrypted_text)
+    #Decrypting all the possible way
     if decrypted_text[-1] == 'x':
         possible_decrypt.append(decrypted_text[:-1])
         if 'i' in decrypted_text:
             possible_decrypt.append(decrypted_text.replace('i','j'))
             possible_decrypt.append(decrypted_text[:-1].replace('i','j'))
+
     return possible_decrypt
 
+def main():
+    """
+    Runs an infinite loop that prompts the user for input to encrypt or decrypt a text.
 
-if __name__ == '__main__':
+    This function continuously prompts the user to enter a text and a keyword. It then asks the user to choose between encrypting the text or decrypting it.
+
+    If the user chooses to encrypt the text, the function calls the `playfair_encrypt` function with the entered text and keyword as arguments and prints the encrypted text.
+
+    If the user chooses to decrypt the text, the function calls the `playfair_decrypt` function with the entered text and keyword as arguments and prints the possible decrypted words.
+
+    If the user enters an invalid choice, the function prints an "Invalid choice" message.
+
+    This function does not take any parameters and does not return any value.
+    """
     while True:
         text = input('Enter your text: ')
         keyword = input('Enter your keyword: ')
@@ -189,3 +213,9 @@ if __name__ == '__main__':
         else:
             print('\nInvalid choice')
         print('\n')
+
+if __name__ == '__main__':
+    '''
+    Execution Block
+    '''
+    main()
