@@ -13,7 +13,6 @@ def vigenere_table():
     for i in range(26):
         temp = alpha[i:] + alpha[:i]
         table.append(list(temp))
-
     return table
 
 def vigenere_encrypt(text,key):
