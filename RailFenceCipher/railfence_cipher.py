@@ -56,7 +56,8 @@ def railfenceDecrypt(text, key):
                 index -= 1
     return decryptedText            
     
-
-# print(railfenceDecrypt('GSGSEKFREKEOE', 3))
-# print(railfenceEncrypt('GEEKSFORGEEKS', 3))
-# print(railfence_encrypt('GSGSEKFREKEOE', 3))
+if __name__ == '__main__':
+    print(railfenceEncrypt('GEEKSFORGEEKS', 3))
+    print(railfenceDecrypt('GSGSEKFREKEOE', 3))
+    # print(railfenceDecrypt('GSGSEKFREKEOE', 3))
+    # print(railfenceEncrypt('GEEKSFORGEEKS', 3))
